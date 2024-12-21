@@ -1,4 +1,5 @@
 #include <vector>
+#ifndef MATRIX_REGULAR_CPP
 /*
 A regular matrix implementation with O(n^3) complexity.
 */
@@ -26,3 +27,5 @@ struct MatrixRegular {
         return MatrixRegular(res);
     }
 };
+#define MATRIX_REGULAR_CPP
+#endif

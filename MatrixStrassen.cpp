@@ -1,3 +1,5 @@
+#ifndef MATRIX_STRASSEN_CPP
+#define MATRIX_STRASSEN_CPP
 #include <future>
 #include <stdexcept>
 #include <vector>
@@ -11,13 +13,13 @@ struct MatrixStrassen {
 
   MatrixStrassen() {}
 
-  MatrixStrassen(int dim) {
-    this->dim = 1 << (32 - __builtin_clz(dim - 1));
-    mat = vector<vector<int>>(this->dim, vector<int>(this->dim, 0));
+  MatrixStrassen(int dim) :dim(dim) {
+    mat = std::vector<std::vector<int>>(this->dim,
+                                        std::vector<int>(this->dim, 0));
   }
-
+  
   MatrixStrassen(vector<vector<int>> mat, int dim) : mat(mat), dim(dim) {
-    int _dim = 1 << (32 - __builtin_clz(dim - 1));
+    int _dim =dim==1?1: 1 << (32 - __builtin_clz(dim - 1));
 
     if (_dim != dim) {
       vector<vector<int>> _mat(_dim, vector<int>(_dim, 0));
@@ -34,7 +36,7 @@ struct MatrixStrassen {
     for (int i = 0; i < dim; i++)
       for (int j = 0; j < dim; j++)
         for (int k = 0; k < dim; k++) res[i][j] += mat[i][k] * other.mat[k][j];
-    return MatrixStrassen(res,dim);
+    return MatrixStrassen(res, dim);
   }
 
   MatrixStrassen operator+(MatrixStrassen other) {
@@ -58,8 +60,7 @@ struct MatrixStrassen {
     if (dim <= optimizer) return mul(other);
     int m = dim / 2;
 
-    MatrixStrassen A11(m), A12(m), A21(m), A22(m);
-    MatrixStrassen B11(m), B12(m), B21(m), B22(m);
+    MatrixStrassen A11(m), A12(m), A21(m), A22(m),B11(m), B12(m), B21(m), B22(m);
 
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < m; j++) {
@@ -74,7 +75,9 @@ struct MatrixStrassen {
       }
     }
 
-    MatrixStrassen M1 = (A11 + A22) * (B11 + B22);
+  MatrixStrassen q1 = A11 + A22;
+    MatrixStrassen q2 = B11 + B22;
+    MatrixStrassen M1 = q1*q2;
     MatrixStrassen M2 = (A21 + A22) * B11;
     MatrixStrassen M3 = A11 * (B12 - B22);
     MatrixStrassen M4 = A22 * (B21 - B11);
@@ -99,3 +102,4 @@ struct MatrixStrassen {
   }
 };
 int MatrixStrassen::optimizer = 0;
+#endif
