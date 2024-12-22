@@ -13,13 +13,13 @@ struct MatrixStrassen {
 
   MatrixStrassen() {}
 
-  MatrixStrassen(int dim) :dim(dim) {
+  MatrixStrassen(int dim) : dim(dim) {
     mat = std::vector<std::vector<int>>(this->dim,
                                         std::vector<int>(this->dim, 0));
   }
-  
+
   MatrixStrassen(vector<vector<int>> mat, int dim) : mat(mat), dim(dim) {
-    int _dim =dim==1?1: 1 << (32 - __builtin_clz(dim - 1));
+    int _dim = dim == 1 ? 1 : 1 << (32 - __builtin_clz(dim - 1));
 
     if (_dim != dim) {
       vector<vector<int>> _mat(_dim, vector<int>(_dim, 0));
@@ -60,8 +60,9 @@ struct MatrixStrassen {
     if (dim <= optimizer) return mul(other);
     int m = dim / 2;
 
-    MatrixStrassen A11(m), A12(m), A21(m), A22(m),B11(m), B12(m), B21(m), B22(m);
-
+    MatrixStrassen A11(m), A12(m), A21(m), A22(m), B11(m), B12(m), B21(m),
+        B22(m);
+    // division of matrix
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < m; j++) {
         A11.mat[i][j] = mat[i][j];
@@ -75,9 +76,10 @@ struct MatrixStrassen {
       }
     }
 
-  MatrixStrassen q1 = A11 + A22;
+    // Formula calculation
+    MatrixStrassen q1 = A11 + A22;
     MatrixStrassen q2 = B11 + B22;
-    MatrixStrassen M1 = q1*q2;
+    MatrixStrassen M1 = q1 * q2;
     MatrixStrassen M2 = (A21 + A22) * B11;
     MatrixStrassen M3 = A11 * (B12 - B22);
     MatrixStrassen M4 = A22 * (B21 - B11);
@@ -89,6 +91,7 @@ struct MatrixStrassen {
     MatrixStrassen C21 = (M2 + M4);
     MatrixStrassen C22 = (M1 - M2 + M3 + M6);
 
+    // Merge the results to get the final matrix
     MatrixStrassen res(dim);
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < m; j++) {

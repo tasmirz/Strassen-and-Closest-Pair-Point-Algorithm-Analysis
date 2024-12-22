@@ -36,7 +36,7 @@ void benchmarkMatrixMultiplication() {
   csvFile << "Dimension,Optimizer,Regular,Strassen,ParallelStrassen\n";
 
   vector<int> dimensions = {32, 64, 128, 256, 512, 1024};
-  vector<int> optimizers = {/*0,*/32, 64};
+  vector<int> optimizers = {0,32, 64,128,256,512};
 
   for (int optimizer : optimizers) {
     MatrixStrassen::optimizer = optimizer;
@@ -45,7 +45,7 @@ void benchmarkMatrixMultiplication() {
     for (int dim : dimensions) {
       cout << "Benchmarking matrix multiplication with dimension " << dim
            << " and optimizer " << optimizer << "...\n";
-
+      if (dim>256 && optimizer==0) continue;
       vector<vector<int>> matA = generateRandomMatrix(dim);
       vector<vector<int>> matB = generateRandomMatrix(dim);
 
@@ -77,7 +77,7 @@ void benchmarkClosestPairAlgorithms() {
   ofstream csvFile("closest_pair_benchmark.csv");
   csvFile << "NumPoints,DC,DCYPreSorted,DCParallelized,DCAllThreaded,NSquare\n";
 
-  vector<int> numPointsList = {100, 1000, 10000, 1000000};  // Different number of points to test
+  vector<int> numPointsList = {100, 1000, 10000, 100000};  // Different number of points to test
 
   for (int numPoints : numPointsList) {
     vector<Point> points;       // Vector to store points
@@ -85,8 +85,8 @@ void benchmarkClosestPairAlgorithms() {
 
     // Generate random points
     for (int i = 0; i < numPoints; ++i) {
-      double x = rand() % 1007;   // Generate random x coordinate
-      double y = rand() % 1007;   // Generate random y coordinate
+      double x = rand() % 100007;   // Generate random x coordinate
+      double y = rand() % 100007;   // Generate random y coordinate
       points.emplace_back(x, y);  // Add point to vector
     }
 
