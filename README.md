@@ -319,6 +319,7 @@ std::vector<std::vector<int>> res(dim, std::vector<int>(dim));
 
 ## Strassen Algorithm
 A square matrix of size $2^n$ can be divided into four submatrices of size $2^{n-1}$. For 
+
 $$
 C = A \cdot B
 $$
@@ -333,6 +334,7 @@ C = \begin{bmatrix} C_{11} & C_{12} \\ C_{21} & C_{22} \end{bmatrix}
 $$
 
 The Strassen algorithm is based on the following formula:
+
 $$ 
 \begin{aligned}
 P_1 &= (A_{11} + A_{22}) \cdot (B_{11} + B_{22}) \\
@@ -344,7 +346,9 @@ P_6 &= (A_{21} - A_{11}) \cdot (B_{11} + B_{12}) \\
 P_7 &= (A_{12} - A_{22}) \cdot (B_{21} + B_{22}) \\
 \end{aligned}
 $$
+
 The product of two matrices can be calculated using these submatrices:
+
 $$
 \begin{aligned}
 C_{11} &= P_1 + P_4 - P_5 + P_7 \\
@@ -353,6 +357,7 @@ C_{21} &= P_2 + P_4 \\
 C_{22} &= P_1 - P_2 + P_3 + P_6 \\
 \end{aligned}
 $$
+
 The Strassen algorithm recursively calculates these submatrices to find the product of two matrices. The time complexity of the Strassen algorithm is $O(n^{2.81})$.
 
 There are multiple ways to implement the Strassen algorithm.
